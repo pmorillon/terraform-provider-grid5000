@@ -6,6 +6,23 @@
 
 ## Installation
 
+### Terraform >= 0.13.x
+
+Add this into your Terraform configuration, then run `terraform init` :
+
+```tf
+terraform {
+  required_providers {
+    grid5000 = {
+      source = "pmorillon/grid5000"
+      version = "0.0.1"
+    }
+  }
+}
+```
+
+### Terraform = 0.12.x
+
 Downloadable packages are available at [Grid5000 provider releases](https://gitlab.inria.fr/pmorillo/terraform-provider-grid5000/-/releases).
 
 How to install:
