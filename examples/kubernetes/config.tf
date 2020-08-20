@@ -7,7 +7,7 @@ terraform {
     }
     grid5000 = {
       source = "pmorillon/grid5000"
-      version = "~> 0.0.1"
+      version = "~> 0.0.2"
     }
   }
   required_version = "~> 0.13.0"
