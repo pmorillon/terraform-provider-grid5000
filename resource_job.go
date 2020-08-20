@@ -53,6 +53,27 @@ func resourceJob() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"vlans_resources": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"subnets_resources": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"disks_resources": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -102,6 +123,9 @@ func resourceJobRead(d *schema.ResourceData, m interface{}) error {
 			d.SetId(fmt.Sprint(job.ID))
 			d.Set("state", job.State)
 			d.Set("assigned_nodes", job.AssignedNodes)
+			d.Set("vlans_resources", job.ResourcesByType.Vlans)
+			d.Set("subnets_resources", job.ResourcesByType.Subnets)
+			d.Set("disks_resources", job.ResourcesByType.Disks)
 		} else {
 			d.SetId("")
 		}
