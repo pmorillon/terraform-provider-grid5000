@@ -186,6 +186,8 @@ github.com/zclconf/go-cty-yaml v1.0.1 h1:up11wlgAaDvlAGENcFDnZgkn0qUJurso7k6EpUR
 github.com/zclconf/go-cty-yaml v1.0.1/go.mod h1:IP3Ylp0wQpYm50IHK8OZWKMu6sPJIUgKa8XhiVHura0=
 gitlab.inria.fr/pmorillo/gog5k v0.0.1 h1:IxOFL/QgrMM7mBWhtR+QelumjqCnbyx4S3NkpzMlh/w=
 gitlab.inria.fr/pmorillo/gog5k v0.0.1/go.mod h1:4A08mFg7uCL7O0Fk7aS8+OKqB/4P6akNjxS9INLoRJA=
+gitlab.inria.fr/pmorillo/gog5k v0.0.2 h1:nP/5G52EBpERo6v3qK65u4kjHB/rpWAUSPalKv8yudM=
+gitlab.inria.fr/pmorillo/gog5k v0.0.2/go.mod h1:4A08mFg7uCL7O0Fk7aS8+OKqB/4P6akNjxS9INLoRJA=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0 h1:C9hSCOW830chIVkdja34wa6Ky+IzWllkUinR+BtRZd4=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
