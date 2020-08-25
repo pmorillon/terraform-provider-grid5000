@@ -21,6 +21,7 @@ resource "grid5000_job" "my_job" {
 * `name` - (Optional) Name of OAR job.
 * `resources` - (Optional) Specify wanted resources with [OAR resources request expression](http://oar.imag.fr/docs/2.5/user/usecases.html#using-the-resource-hierarchy).
 * `types` - (Optional) OAR job type.
+* `scheduled_at_limit` - (Optional, default: 5m) Set the limit for scheduling time. Suffix may be 's' for seconds, 'm' for minutes, 'h' for hours. 
 
 ## Attribute Reference
 

@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"gitlab.inria.fr/pmorillo/gog5k"
@@ -41,6 +43,17 @@ func resourceJob() *schema.Resource {
 			"command": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+			},
+			"scheduled_at_limit": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "5m",
+				ValidateFunc: func(i interface{}, k string) (ws []string, errors []error) {
+					if _, _, err := durationParse(i.(string)); err != nil {
+						errors = append(errors, fmt.Errorf("%q: invalid value, must use the format '5m', suffix may be 's' for seconds, 'm' for minutes, 'h' for hours", k))
+					}
+					return
+				},
 			},
 			"state": &schema.Schema{
 				Type:     schema.TypeString,
@@ -97,6 +110,27 @@ func resourceJobCreate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	jobID := job.ID
+
+	for {
+		job, _, err = client.OARJobs.Get(ctx, site, jobID)
+		if job.ScheduledAt != 0 {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
+
+	isValid, err := validateScheduling(job.ScheduledAt, d.Get("scheduled_at_limit").(string))
+	if err != nil {
+		return err
+	}
+
+	if !isValid {
+		_, err = client.OARJobs.Delete(ctx, site, jobID)
+		if err != nil {
+			return err
+		}
+		return errors.New("OAR job will not be scheduled at time, job is deleted")
+	}
 
 	job, err = client.OARJobs.WaitForState(ctx, site, jobID, gog5k.OARJobRunningState)
 	if err != nil {
@@ -177,4 +211,39 @@ func isJobAvailable(job gog5k.OARJob) bool {
 		return false
 	}
 	return true
+}
+
+func durationParse(duration string) (value string, unit string, err error) {
+	validFormat := regexp.MustCompile(`^(\d+)(s|m|h)$`)
+	if validFormat.MatchString(duration) {
+		res := validFormat.FindAllStringSubmatch(duration, -1)
+		return res[0][1], res[0][2], nil
+	}
+	return "", "", errors.New("duration parsing error")
+}
+
+func validateScheduling(scheduledAt int32, limit string) (bool, error) {
+	value, unit, err := durationParse(limit)
+	if err != nil {
+		return false, err
+	}
+	valueInt64, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		return false, err
+	}
+	var limitInSeconds int64 = 0
+	switch unit {
+	case "s":
+		limitInSeconds = valueInt64
+	case "m":
+		limitInSeconds = valueInt64 * 60
+	case "h":
+		limitInSeconds = valueInt64 * 60 * 60
+	default:
+		log.Printf("Unrecognize unit : %s", unit)
+	}
+	now := time.Now()
+	sec := now.Unix()
+
+	return int64(scheduledAt) < (sec + limitInSeconds), nil
 }
