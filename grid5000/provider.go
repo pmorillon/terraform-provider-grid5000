@@ -28,6 +28,9 @@ func Provider() *schema.Provider {
 			"grid5000_job":        resourceJob(),
 			"grid5000_deployment": resourceDeployment(),
 		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"grid5000_site": dataSourceGrid5000Site(),
+		},
 		ConfigureFunc: providerConfigure,
 	}
 }
