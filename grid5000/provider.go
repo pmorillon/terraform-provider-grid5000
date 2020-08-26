@@ -1,4 +1,4 @@
-package main
+package grid5000
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
