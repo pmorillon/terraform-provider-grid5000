@@ -1,4 +1,4 @@
-package main
+package grid5000
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -27,6 +27,9 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"grid5000_job":        resourceJob(),
 			"grid5000_deployment": resourceDeployment(),
+		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"grid5000_site": dataSourceGrid5000Site(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

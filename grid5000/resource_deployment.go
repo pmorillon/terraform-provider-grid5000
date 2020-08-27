@@ -1,4 +1,4 @@
-package main
+package grid5000
 
 import (
 	"context"
@@ -14,31 +14,7 @@ func resourceDeployment() *schema.Resource {
 		Update: resourceDeploymentUpdate,
 		Delete: resourceDeploymentDelete,
 
-		Schema: map[string]*schema.Schema{
-			"site": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"environment": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"key": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"nodes": &schema.Schema{
-				Type:     schema.TypeSet,
-				Required: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"state": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-		},
+		Schema: grid5000DeploymentFields(),
 	}
 }
 
