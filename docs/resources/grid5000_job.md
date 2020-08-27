@@ -30,3 +30,12 @@ resource "grid5000_job" "my_job" {
 * `disks_resources` - List of disks resources assigned to this job.
 * `subnets_resources` - List of subnets resources assigned to this job.
 * `vlans_resources` - List of vlans resources assigned to this job.
+
+## Nested blocks
+
+### `disks_resources`
+
+#### Attributes
+
+* `hostname` - Node hostname
+* 'device` - Disk device name

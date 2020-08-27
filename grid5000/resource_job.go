@@ -7,6 +7,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -92,7 +93,17 @@ func resourceJobRead(d *schema.ResourceData, m interface{}) error {
 			d.Set("assigned_nodes", job.AssignedNodes)
 			d.Set("vlans_resources", job.ResourcesByType.Vlans)
 			d.Set("subnets_resources", job.ResourcesByType.Subnets)
-			d.Set("disks_resources", job.ResourcesByType.Disks)
+			disks := make([]interface{}, 0, len(job.ResourcesByType.Disks))
+			for _, d := range job.ResourcesByType.Disks {
+				s := strings.Split(d, ".")
+				device := make(map[string]interface{}, 2)
+				device["hostname"] = strings.Join(s[1:], ".")
+				device["device"] = s[0]
+				disks = append(disks, device)
+			}
+			if err := d.Set("disks_resources", disks); err != nil {
+				log.Printf("DEBUG : %v", err)
+			}
 		} else {
 			d.SetId("")
 		}

@@ -69,11 +69,11 @@ func grid5000JobFields() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			},
 		},
-		"disks_resources": &schema.Schema{
+		"disks_resources": {
 			Type:     schema.TypeList,
 			Computed: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
+			Elem: &schema.Resource{
+				Schema: grid5000JobDiskFields(),
 			},
 		},
 	}
