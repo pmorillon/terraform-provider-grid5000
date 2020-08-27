@@ -102,7 +102,7 @@ func resourceJobRead(d *schema.ResourceData, m interface{}) error {
 				disks = append(disks, device)
 			}
 			if err := d.Set("disks_resources", disks); err != nil {
-				log.Printf("DEBUG : %v", err)
+				log.Printf("Error : %v", err)
 			}
 		} else {
 			d.SetId("")

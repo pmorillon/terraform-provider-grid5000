@@ -32,3 +32,4 @@ The following attributes are exported:
 * `latitude` - Latitude position.
 * `description` - Site description.
 * `location` - Site location.
+* `clusters` - List of available clusters.

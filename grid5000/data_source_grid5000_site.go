@@ -3,6 +3,7 @@ package grid5000
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"gitlab.inria.fr/pmorillo/gog5k"
@@ -52,6 +53,13 @@ func dataSourceGrid5000Site() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"clusters": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -65,6 +73,11 @@ func datasourceGrid5000SiteRead(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf("Failed to get site : %v", err)
 	}
 
+	clusters, _, err := client.Clusters.List(ctx, site.UID)
+	if err != nil {
+		return fmt.Errorf("Failed to get clusters: %v", err)
+	}
+
 	d.SetId(site.UID)
 	d.Set("frontend_ip", site.FrontendIP)
 	d.Set("email_contact", site.EmailContact)
@@ -74,6 +87,14 @@ func datasourceGrid5000SiteRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("latitude", site.Latitude)
 	d.Set("description", site.Description)
 	d.Set("location", site.Location)
+
+	clustersNames := make([]string, 0, len(clusters))
+	for _, c := range clusters {
+		clustersNames = append(clustersNames, c.UID)
+	}
+	if err := d.Set("clusters", clustersNames); err != nil {
+		log.Printf("Error : %v", err)
+	}
 
 	return nil
 }
