@@ -23,39 +23,39 @@ func dataSourceGrid5000Site() *schema.Resource {
 			// Out parameters
 			"frontend_ip": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"email_contact": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"production": {
 				Type:     schema.TypeBool,
-				Optional: true,
+				Computed: true,
 			},
 			"renater_ip": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"longitude": {
 				Type:     schema.TypeFloat,
-				Optional: true,
+				Computed: true,
 			},
 			"latitude": {
 				Type:     schema.TypeFloat,
-				Optional: true,
+				Computed: true,
 			},
 			"description": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"location": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"clusters": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

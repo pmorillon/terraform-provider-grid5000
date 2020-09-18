@@ -27,11 +27,11 @@ func dataSourceGrid5000Node() *schema.Resource {
 			// Out parameters
 			"ip": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"ip6": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 		},
 	}
