@@ -30,6 +30,7 @@ func Provider() *schema.Provider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"grid5000_site": dataSourceGrid5000Site(),
+			"grid5000_node": dataSourceGrid5000Node(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

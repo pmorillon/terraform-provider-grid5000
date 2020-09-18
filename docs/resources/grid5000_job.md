@@ -38,4 +38,4 @@ resource "grid5000_job" "my_job" {
 #### Attributes
 
 * `hostname` - Node hostname
-* 'device` - Disk device name
+* `device` - Disk device name
