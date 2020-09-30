@@ -32,10 +32,11 @@ func resourceJobCreate(d *schema.ResourceData, m interface{}) error {
 	ctx := context.Background()
 
 	createRequest := &gog5k.OARJobCreateRequest{
-		Name:      d.Get("name").(string),
-		Command:   d.Get("command").(string),
-		Resources: d.Get("resources").(string),
-		Types:     expandTypes(d.Get("types").(*schema.Set).List()),
+		Name:       d.Get("name").(string),
+		Command:    d.Get("command").(string),
+		Resources:  d.Get("resources").(string),
+		Properties: d.Get("properties").(string),
+		Types:      expandTypes(d.Get("types").(*schema.Set).List()),
 	}
 
 	job, _, err := client.OARJobs.Create(ctx, site, createRequest)

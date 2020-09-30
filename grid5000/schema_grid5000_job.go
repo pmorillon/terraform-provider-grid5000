@@ -44,6 +44,10 @@ func grid5000JobFields() map[string]*schema.Schema {
 				return
 			},
 		},
+		"properties": &schema.Schema{
+			Type:     schema.TypeString,
+			Optional: true,
+		},
 		"state": &schema.Schema{
 			Type:     schema.TypeString,
 			Computed: true,
