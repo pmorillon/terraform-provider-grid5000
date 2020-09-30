@@ -25,6 +25,10 @@ func grid5000DeploymentFields() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			},
 		},
+		"partition_number": &schema.Schema{
+			Type:     schema.TypeInt,
+			Optional: true,
+		},
 		"state": &schema.Schema{
 			Type:     schema.TypeString,
 			Computed: true,
