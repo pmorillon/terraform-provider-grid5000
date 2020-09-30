@@ -43,7 +43,7 @@ func datasourceGrid5000NodeRead(d *schema.ResourceData, m interface{}) error {
 
 	node, _, err := client.Nodes.Get(ctx, d.Get("site").(string), shortHostname(d.Get("name").(string)))
 	if err != nil {
-		return fmt.Errorf("Failed to get site : %v", err)
+		return fmt.Errorf("Failed to get node : %v", err)
 	}
 
 	d.SetId(node.UID)
