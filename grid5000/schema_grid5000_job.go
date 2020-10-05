@@ -29,6 +29,10 @@ func grid5000JobFields() map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Optional: true,
 		},
+		"reservation": &schema.Schema{
+			Type:     schema.TypeString,
+			Optional: true,
+		},
 		"command": &schema.Schema{
 			Type:     schema.TypeString,
 			Required: true,
@@ -43,6 +47,11 @@ func grid5000JobFields() map[string]*schema.Schema {
 				}
 				return
 			},
+		},
+		"need_state": &schema.Schema{
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "running",
 		},
 		"properties": &schema.Schema{
 			Type:     schema.TypeString,
