@@ -122,7 +122,7 @@ func resourceJobRead(d *schema.ResourceData, m interface{}) error {
 			case gog5k.OARJobWaitingState:
 				d.SetId(fmt.Sprint(job.ID))
 				d.Set("need_state", "waiting")
-				return fmt.Errorf("oar job %d is in %s state, it will be scheduled at %d, restart terraform apply later", job.ID, job.State, job.ScheduledAt)
+				return fmt.Errorf("oar job %d is in %s state, it will be scheduled at %s, restart terraform apply later", job.ID, job.State, time.Unix(int64(job.ScheduledAt), 0))
 			}
 		}
 	}
