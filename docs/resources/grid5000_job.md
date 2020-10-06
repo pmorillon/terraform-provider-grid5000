@@ -21,7 +21,9 @@ resource "grid5000_job" "my_job" {
 * `name` - (Optional) Name of OAR job.
 * `resources` - (Optional) Specify wanted resources with [OAR resources request expression](http://oar.imag.fr/docs/2.5/user/usecases.html#using-the-resource-hierarchy).
 * `types` - (Optional) OAR job type.
-* `scheduled_at_limit` - (Optional, default: 5m) Set the limit for scheduling time. Suffix may be 's' for seconds, 'm' for minutes, 'h' for hours. 
+* `properties` - (Optional) OAR job properties.
+* `scheduled_at_limit` - (Optional, default: 5m) Set the limit for scheduling time. Suffix may be 's' for seconds, 'm' for minutes, 'h' for hours. Ignored when reservation argument is used.
+* `reservation` - (Optional) Request a job start time reservation, instead of a submission. The date format is "YYYY-MM-DD HH:MM:SS". Warning : the grid5000_job resource will be tainted automatically. When job is started, you need to untaint the resource before apply.
 
 ## Attribute Reference
 

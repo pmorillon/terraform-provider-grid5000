@@ -31,6 +31,14 @@ func resourceDeploymentCreate(d *schema.ResourceData, m interface{}) error {
 		Nodes:       nodes,
 	}
 
+	if p := d.Get("partition_number").(int); p != 0 {
+		createRequest.PartitionNumber = p
+	}
+
+	if v := d.Get("vlan").(int); v != 0 {
+		createRequest.Vlan = int16(v)
+	}
+
 	deployment, _, err := client.Deployments.Create(ctx, site, createRequest)
 	if err != nil {
 		return err

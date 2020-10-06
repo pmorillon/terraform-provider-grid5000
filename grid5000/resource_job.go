@@ -32,10 +32,17 @@ func resourceJobCreate(d *schema.ResourceData, m interface{}) error {
 	ctx := context.Background()
 
 	createRequest := &gog5k.OARJobCreateRequest{
-		Name:      d.Get("name").(string),
-		Command:   d.Get("command").(string),
-		Resources: d.Get("resources").(string),
-		Types:     expandTypes(d.Get("types").(*schema.Set).List()),
+		Name:       d.Get("name").(string),
+		Command:    d.Get("command").(string),
+		Resources:  d.Get("resources").(string),
+		Properties: d.Get("properties").(string),
+		Types:      expandTypes(d.Get("types").(*schema.Set).List()),
+	}
+
+	advanceReservation := d.Get("reservation").(string)
+
+	if advanceReservation != "" {
+		createRequest.Reservation = advanceReservation
 	}
 
 	job, _, err := client.OARJobs.Create(ctx, site, createRequest)
@@ -53,22 +60,24 @@ func resourceJobCreate(d *schema.ResourceData, m interface{}) error {
 		time.Sleep(5 * time.Second)
 	}
 
-	isValid, err := validateScheduling(job.ScheduledAt, d.Get("scheduled_at_limit").(string))
-	if err != nil {
-		return err
-	}
-
-	if !isValid {
-		_, err = client.OARJobs.Delete(ctx, site, jobID)
+	if advanceReservation == "" {
+		isValid, err := validateScheduling(job.ScheduledAt, d.Get("scheduled_at_limit").(string))
 		if err != nil {
 			return err
 		}
-		return errors.New("OAR job will not be scheduled at time, job is deleted")
-	}
 
-	job, err = client.OARJobs.WaitForState(ctx, site, jobID, gog5k.OARJobRunningState)
-	if err != nil {
-		return err
+		if !isValid {
+			_, err = client.OARJobs.Delete(ctx, site, jobID)
+			if err != nil {
+				return err
+			}
+			return errors.New("OAR job will not be scheduled at time, job is deleted")
+		}
+
+		job, err = client.OARJobs.WaitForState(ctx, site, jobID, gog5k.OARJobRunningState)
+		if err != nil {
+			return err
+		}
 	}
 
 	d.SetId(fmt.Sprint(job.ID))
@@ -90,6 +99,7 @@ func resourceJobRead(d *schema.ResourceData, m interface{}) error {
 		if isJobAvailable(*job) {
 			d.SetId(fmt.Sprint(job.ID))
 			d.Set("state", job.State)
+			d.Set("need_state", job.State)
 			d.Set("assigned_nodes", job.AssignedNodes)
 			d.Set("vlans_resources", job.ResourcesByType.Vlans)
 			d.Set("subnets_resources", job.ResourcesByType.Subnets)
@@ -105,7 +115,15 @@ func resourceJobRead(d *schema.ResourceData, m interface{}) error {
 				log.Printf("Error : %v", err)
 			}
 		} else {
-			d.SetId("")
+			switch job.State {
+			case gog5k.OARJobErrorState, gog5k.OARJobTerminatedState:
+				d.SetId("")
+				return fmt.Errorf("oar job %d is in %s state", job.ID, job.State)
+			case gog5k.OARJobWaitingState:
+				d.SetId(fmt.Sprint(job.ID))
+				d.Set("need_state", "waiting")
+				return fmt.Errorf("oar job %d is in %s state, it will be scheduled at %s, restart terraform apply later", job.ID, job.State, time.Unix(int64(job.ScheduledAt), 0))
+			}
 		}
 	}
 
@@ -151,7 +169,7 @@ func expandTypes(types []interface{}) []string {
 }
 
 func isJobAvailable(job gog5k.OARJob) bool {
-	if (job.State == gog5k.OARJobTerminatedState) || (job.State == gog5k.OARJobErrorState) {
+	if (job.State == gog5k.OARJobTerminatedState) || (job.State == gog5k.OARJobErrorState) || (job.State == gog5k.OARJobWaitingState) {
 		return false
 	}
 	return true

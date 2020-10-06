@@ -19,6 +19,8 @@ resource "grid5000_deployment" "my_deployment" {
 * `environment` - (Required) Environment name.
 * `nodes` - (Required) Nodes list to deploy.
 * `key` - (Optional) SSH pubkey to connect on deployed nodes.
+* `partition_number` - (Optional, int) Partition number of the primary disk where environment will be deployed.
+* `vlan` - (Optional, int) Vlan number to set nodes after deployment.
 
 ## Attribute Reference
 
