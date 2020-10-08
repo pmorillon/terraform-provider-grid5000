@@ -17,7 +17,7 @@ resource "grid5000_job" "my_job" {
 ## Argument Reference
 
 * `site` - (Required) A grid'5000 site.
-* `command` - (Required) Script or command to execute.
+* `command` - (Optional) Script or command to execute.
 * `name` - (Optional) Name of OAR job.
 * `resources` - (Optional) Specify wanted resources with [OAR resources request expression](http://oar.imag.fr/docs/2.5/user/usecases.html#using-the-resource-hierarchy).
 * `types` - (Optional) OAR job type.
