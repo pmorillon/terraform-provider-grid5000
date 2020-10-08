@@ -20,6 +20,9 @@ func resourceJob() *schema.Resource {
 		Read:   resourceJobRead,
 		Update: resourceJobUpdate,
 		Delete: resourceJobDelete,
+		Importer: &schema.ResourceImporter{
+			State: resourceGrid5000JobImport,
+		},
 
 		Schema: grid5000JobFields(),
 	}

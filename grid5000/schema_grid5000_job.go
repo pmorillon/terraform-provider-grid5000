@@ -35,7 +35,7 @@ func grid5000JobFields() map[string]*schema.Schema {
 		},
 		"command": &schema.Schema{
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"scheduled_at_limit": &schema.Schema{
 			Type:     schema.TypeString,
