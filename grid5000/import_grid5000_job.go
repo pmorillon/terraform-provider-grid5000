@@ -35,6 +35,7 @@ func resourceGrid5000JobImport(d *schema.ResourceData, m interface{}) ([]*schema
 	if isJobAvailable(*job) {
 		d.SetId(fmt.Sprint(job.ID))
 		d.Set("site", site)
+		d.Set("scheduled_at_limit", "5m")
 		d.Set("command", job.Command)
 		d.Set("state", job.State)
 		d.Set("need_state", job.State)
