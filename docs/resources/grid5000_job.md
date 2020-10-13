@@ -17,7 +17,7 @@ resource "grid5000_job" "my_job" {
 ## Argument Reference
 
 * `site` - (Required) A grid'5000 site.
-* `command` - (Required) Script or command to execute.
+* `command` - (Optional) Script or command to execute.
 * `name` - (Optional) Name of OAR job.
 * `resources` - (Optional) Specify wanted resources with [OAR resources request expression](http://oar.imag.fr/docs/2.5/user/usecases.html#using-the-resource-hierarchy).
 * `types` - (Optional) OAR job type.
@@ -41,3 +41,40 @@ resource "grid5000_job" "my_job" {
 
 * `hostname` - Node hostname
 * `device` - Disk device name
+
+## Import
+
+`grid5000_job` can be imported with existing job.
+
+```hcl
+resource "grid5000_job" "test" {
+  site = "rennes"
+}
+```
+
+```sh
+terraform import grid5000_job.test 1361479@rennes
+# grid5000_job.test: Importing from ID "1361479@rennes"...
+# grid5000_job.test: Import prepared!
+#   Prepared grid5000_job for import
+# grid5000_job.test: Refreshing state... [id=1361479]
+# 
+# Import successful!
+# 
+# The resources that were imported are shown above. These resources are now in
+# your Terraform state and will henceforth be managed by Terraform.
+terraform state show grid5000_job.test
+# # grid5000_job.test:
+# resource "grid5000_job" "test" {
+#     assigned_nodes    = [
+#         "parapide-18.rennes.grid5000.fr",
+#     ]
+#     disks_resources   = []
+#     id                = "1361479"
+#     need_state        = "running"
+#     site              = "rennes"
+#     state             = "running"
+#     subnets_resources = []
+#     vlans_resources   = []
+# }
+```

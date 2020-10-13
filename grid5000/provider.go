@@ -29,8 +29,9 @@ func Provider() *schema.Provider {
 			"grid5000_deployment": resourceDeployment(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"grid5000_site": dataSourceGrid5000Site(),
-			"grid5000_node": dataSourceGrid5000Node(),
+			"grid5000_site":          dataSourceGrid5000Site(),
+			"grid5000_node":          dataSourceGrid5000Node(),
+			"grid5000_vlan_nodelist": dataSourceGrid5000VlanNodelist(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
