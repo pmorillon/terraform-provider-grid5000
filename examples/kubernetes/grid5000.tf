@@ -6,7 +6,7 @@ locals {
 resource "grid5000_job" "my_job" {
   name      = "Terraform RKE"
   site      = local.site
-  command   = "sleep 1h"
+  command   = "sleep 1d"
   resources = "/nodes=${local.nodes_count}"
   types     = ["deploy"]
 }
