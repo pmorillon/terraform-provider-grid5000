@@ -36,3 +36,17 @@ Pin: version ${PKG_CONTAINERD_VERSION}
 Pin-Priority: 1001
 EOF
 apt-get install -y docker-ce
+
+# Configure docker mirror
+cat << EOF > /etc/docker/daemon.json
+{
+          "registry-mirrors": ["https://docker-mirror.rennes.grid5000.fr"],
+          "insecure-registries" : ["harbor.rennes.grid5000.fr","docker-mirror.rennes.grid5000.fr"]
+}
+EOF
+
+# Restart docker
+systemctl restart docker
+
+# Wait until docker is available
+until [ -S /var/run/docker.sock ]; do sleep 1; done
