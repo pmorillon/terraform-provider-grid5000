@@ -1,0 +1,13 @@
+#!/bin/bash
+# Format all reserved disks
+
+apt-get install -y lvm2 gdisk
+
+for i in ${join(" ", disks)}; do 
+  echo "--> Prepare disk $i"
+  echo 'label: gpt' | sfdisk /dev/$${i}
+  sgdisk --zap-all /dev/$${i}
+done
+
+ls /dev/mapper/ceph-* | xargs -I% -- dmsetup remove %
+rm -rf /dev/ceph-*

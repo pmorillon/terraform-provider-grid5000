@@ -1,0 +1,25 @@
+# Context prod or staging (g5k deployement)
+context: staging
+
+rook:
+  version: v1.5.5
+
+ceph:
+  version: v15.2.8-20201217
+
+resources:
+  osd:
+    limits:
+      cpu: "1"
+      memory: "6Gi"
+    requests:
+      cpu: "500m"
+      memory: "6Gi"
+
+storage:
+  config:
+    metadataDevice: ""
+  nodes:
+
+dashboard:
+  hostname: ceph.example.com

@@ -1,0 +1,36 @@
+---
+# OLM: BEGIN ROLE
+# Aspects for creation of monitoring resources
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rook-ceph-monitor
+  namespace: {{  .Release.Namespace }}
+rules:
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - '*'
+  verbs:
+  - '*'
+# OLM: END ROLE
+---
+# OLM: BEGIN ROLE
+# Aspects for metrics collection
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rook-ceph-metrics
+  namespace: {{  .Release.Namespace }}
+rules:
+ - apiGroups:
+   - ""
+   resources:
+    - services
+    - endpoints
+    - pods
+   verbs:
+    - get
+    - list
+    - watch
+# OLM: END ROLE
