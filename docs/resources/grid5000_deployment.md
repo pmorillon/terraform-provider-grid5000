@@ -2,7 +2,7 @@
 
 Manage [Kadeploy](http://kadeploy3.gforge.inria.fr) deployments on Grid'5000.
 
-## Example Usage
+## Exemple Usage
 
 ```hcl
 resource "grid5000_deployment" "my_deployment" {
