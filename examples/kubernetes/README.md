@@ -22,11 +22,58 @@ cd terraform-grid5000-provider/examples/kubernetes
 
 # init : will automatically download required Terraform providers
 terraform init
+```
 
+Edit `main.tf` file to describe your deployment, see available [input values](https://registry.terraform.io/modules/pmorillon/k8s-cluster/grid5000/latest?tab=inputs)
 
+```tf
+module "k8s_cluster" {
+    source = "pmorillon/k8s-cluster/grid5000"
+    version = "~> 0.0.1"
+
+    walltime = "2"
+    site = "rennes"
+}
+```
+
+```sh
 # apply
 terraform apply
+# ...
+module.k8s_cluster.grid5000_job.k8s: Creating...
+module.k8s_cluster.grid5000_job.k8s: Still creating... [10s elapsed]
+module.k8s_cluster.grid5000_job.k8s: Creation complete after 18s [id=1457758]
+module.k8s_cluster.grid5000_deployment.k8s: Creating...
+module.k8s_cluster.grid5000_deployment.k8s: Still creating... [10s elapsed]
+# ...
+module.k8s_cluster.grid5000_deployment.k8s: Creation complete after 4m51s [id=D-3c3d18c3-3f21-4f63-8c96-282fff9ea135]
+module.k8s_cluster.null_resource.docker_install[0]: Creating...
+module.k8s_cluster.null_resource.docker_install[0]: Provisioning with 'file'...
+module.k8s_cluster.null_resource.docker_install[1]: Creating...
+module.k8s_cluster.null_resource.docker_install[3]: Creating...
+module.k8s_cluster.null_resource.docker_install[2]: Creating...
+module.k8s_cluster.null_resource.docker_install[3]: Provisioning with 'file'...
+module.k8s_cluster.null_resource.docker_install[1]: Provisioning with 'file'...
+module.k8s_cluster.null_resource.docker_install[2]: Provisioning with 'file'...
+module.k8s_cluster.null_resource.docker_install[2]: Provisioning with 'remote-exec'...
+# ...
+module.k8s_cluster.null_resource.docker_install[0]: Still creating... [10s elapsed]
+module.k8s_cluster.null_resource.docker_install[1]: Still creating... [10s elapsed]
+module.k8s_cluster.null_resource.docker_install[3]: Still creating... [10s elapsed]
+module.k8s_cluster.null_resource.docker_install[2]: Still creating... [10s elapsed]
+# ...
+module.k8s_cluster.null_resource.docker_install[1]: Creation complete after 1m40s [id=2735933040659486651]
+module.k8s_cluster.null_resource.docker_install[0]: Creation complete after 1m40s [id=5229444562703927069]
+module.k8s_cluster.null_resource.docker_install[2]: Creation complete after 1m41s [id=4065656999805753798]
+module.k8s_cluster.null_resource.docker_install[3]: Creation complete after 1m45s [id=362653944675258782]
+module.k8s_cluster.rke_cluster.cluster: Creating...
+module.k8s_cluster.rke_cluster.cluster: Still creating... [10s elapsed]
+# ...
+module.k8s_cluster.rke_cluster.cluster: Creation complete after 3m54s [id=edd11299-1b9c-46aa-9027-9b49a8d8724d]
+module.k8s_cluster.local_file.kube_cluster_yaml: Creating...
+module.k8s_cluster.local_file.kube_cluster_yaml: Creation complete after 0s [id=067ddeeab04eb55eb19756d705f74f4481033df6]
 
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
 # When terraform apply is completed, a kubeconfig file must be
 # created in the current directory
@@ -43,74 +90,84 @@ etcd-0               Healthy   {"health":"true"}
 
 # List cluster nodes
 kubectl get nodes        
-NAME                              STATUS   ROLES               AGE   VERSION
-paravance-66.rennes.grid5000.fr   Ready    controlplane,etcd   28m   v1.18.3
-paravance-67.rennes.grid5000.fr   Ready    worker              28m   v1.18.3
-paravance-7.rennes.grid5000.fr    Ready    worker              28m   v1.18.3
-paravance-9.rennes.grid5000.fr    Ready    worker              28m   v1.18.3
+NAME                              STATUS   ROLES               AGE     VERSION
+paranoia-1.rennes.grid5000.fr     Ready    controlplane,etcd   5m19s   v1.19.6
+paranoia-5.rennes.grid5000.fr     Ready    worker              5m16s   v1.19.6
+paranoia-6.rennes.grid5000.fr     Ready    worker              5m16s   v1.19.6
+paravance-63.rennes.grid5000.fr   Ready    worker              5m15s   v1.19.6
 
 
-# Show deployed application
-kubectl -n monitoring get all         
-NAME                                                         READY   STATUS    RESTARTS   AGE
-pod/alertmanager-prom-op-prometheus-operato-alertmanager-0   2/2     Running   0          119s
-pod/prom-op-grafana-775bb4dcbf-kcv84                         2/2     Running   0          2m12s
-pod/prom-op-kube-state-metrics-5b69759966-9jt6w              1/1     Running   0          2m12s
-pod/prom-op-prometheus-node-exporter-9rb7d                   1/1     Running   0          2m12s
-pod/prom-op-prometheus-node-exporter-mhs8v                   1/1     Running   0          2m12s
-pod/prom-op-prometheus-node-exporter-zrggt                   1/1     Running   0          2m12s
-pod/prom-op-prometheus-operato-operator-5f7ccbc9b7-wtfxr     2/2     Running   0          2m12s
-pod/prometheus-prom-op-prometheus-operato-prometheus-0       3/3     Running   1          109s
+# Show deployed resources
+kubectl get all -A 
+NAMESPACE       NAME                                           READY   STATUS      RESTARTS   AGE
+ingress-nginx   pod/default-http-backend-65dd5949d9-4p2mc      1/1     Running     0          5m5s
+ingress-nginx   pod/nginx-ingress-controller-hxzhw             1/1     Running     0          5m5s
+ingress-nginx   pod/nginx-ingress-controller-sqq7s             1/1     Running     0          5m5s
+ingress-nginx   pod/nginx-ingress-controller-z98mz             1/1     Running     0          5m5s
+kube-system     pod/calico-kube-controllers-7fbff695b4-52fgf   1/1     Running     0          5m32s
+kube-system     pod/canal-6x6kk                                2/2     Running     0          5m32s
+kube-system     pod/canal-fwkcv                                2/2     Running     0          5m32s
+kube-system     pod/canal-n6pkv                                2/2     Running     0          5m32s
+kube-system     pod/canal-wtnxg                                2/2     Running     0          5m32s
+kube-system     pod/coredns-6f85d5fb88-7fqzf                   1/1     Running     0          4m39s
+kube-system     pod/coredns-6f85d5fb88-9gpx7                   1/1     Running     0          5m26s
+kube-system     pod/coredns-autoscaler-79599b9dc6-2jvrq        1/1     Running     0          5m25s
+kube-system     pod/metrics-server-8449844bf-d8drl             1/1     Running     0          5m15s
+kube-system     pod/rke-coredns-addon-deploy-job-gl6n9         0/1     Completed   0          5m30s
+kube-system     pod/rke-ingress-controller-deploy-job-qpmzf    0/1     Completed   0          5m9s
+kube-system     pod/rke-metrics-addon-deploy-job-vwxdt         0/1     Completed   0          5m20s
+kube-system     pod/rke-network-plugin-deploy-job-4f89s        0/1     Completed   0          5m45s
 
-NAME                                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
-service/alertmanager-operated                     ClusterIP   None            <none>        9093/TCP,9094/TCP,9094/UDP   119s
-service/prom-op-grafana                           ClusterIP   10.43.225.48    <none>        80/TCP                       2m12s
-service/prom-op-kube-state-metrics                ClusterIP   10.43.229.88    <none>        8080/TCP                     2m12s
-service/prom-op-prometheus-node-exporter          ClusterIP   10.43.231.69    <none>        9100/TCP                     2m12s
-service/prom-op-prometheus-operato-alertmanager   ClusterIP   10.43.111.112   <none>        9093/TCP                     2m12s
-service/prom-op-prometheus-operato-operator       ClusterIP   10.43.215.68    <none>        8080/TCP,443/TCP             2m12s
-service/prom-op-prometheus-operato-prometheus     ClusterIP   10.43.175.156   <none>        9090/TCP                     2m12s
-service/prometheus-operated                       ClusterIP   None            <none>        9090/TCP                     109s
+NAMESPACE       NAME                           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                  AGE
+default         service/kubernetes             ClusterIP   10.43.0.1      <none>        443/TCP                  6m33s
+ingress-nginx   service/default-http-backend   ClusterIP   10.43.240.19   <none>        80/TCP                   5m5s
+kube-system     service/kube-dns               ClusterIP   10.43.0.10     <none>        53/UDP,53/TCP,9153/TCP   5m26s
+kube-system     service/metrics-server         ClusterIP   10.43.49.31    <none>        443/TCP                  5m15s
 
-NAME                                              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-daemonset.apps/prom-op-prometheus-node-exporter   3         3         3       3            3           <none>          2m12s
+NAMESPACE       NAME                                      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+ingress-nginx   daemonset.apps/nginx-ingress-controller   3         3         3       3            3           <none>                   5m5s
+kube-system     daemonset.apps/canal                      4         4         4       4            4           kubernetes.io/os=linux   5m33s
 
-NAME                                                  READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/prom-op-grafana                       1/1     1            1           2m12s
-deployment.apps/prom-op-kube-state-metrics            1/1     1            1           2m12s
-deployment.apps/prom-op-prometheus-operato-operator   1/1     1            1           2m12s
+NAMESPACE       NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+ingress-nginx   deployment.apps/default-http-backend      1/1     1            1           5m5s
+kube-system     deployment.apps/calico-kube-controllers   1/1     1            1           5m33s
+kube-system     deployment.apps/coredns                   2/2     2            2           5m27s
+kube-system     deployment.apps/coredns-autoscaler        1/1     1            1           5m26s
+kube-system     deployment.apps/metrics-server            1/1     1            1           5m15s
 
-NAME                                                             DESIRED   CURRENT   READY   AGE
-replicaset.apps/prom-op-grafana-775bb4dcbf                       1         1         1       2m12s
-replicaset.apps/prom-op-kube-state-metrics-5b69759966            1         1         1       2m12s
-replicaset.apps/prom-op-prometheus-operato-operator-5f7ccbc9b7   1         1         1       2m12s
+NAMESPACE       NAME                                                 DESIRED   CURRENT   READY   AGE
+ingress-nginx   replicaset.apps/default-http-backend-65dd5949d9      1         1         1       5m5s
+kube-system     replicaset.apps/calico-kube-controllers-7fbff695b4   1         1         1       5m33s
+kube-system     replicaset.apps/coredns-6f85d5fb88                   2         2         2       5m27s
+kube-system     replicaset.apps/coredns-autoscaler-79599b9dc6        1         1         1       5m26s
+kube-system     replicaset.apps/metrics-server-8449844bf             1         1         1       5m15s
 
-NAME                                                                    READY   AGE
-statefulset.apps/alertmanager-prom-op-prometheus-operato-alertmanager   1/1     119s
-statefulset.apps/prometheus-prom-op-prometheus-operato-prometheus       1/1     109s
+NAMESPACE     NAME                                          COMPLETIONS   DURATION   AGE
+kube-system   job.batch/rke-coredns-addon-deploy-job        1/1           6s         5m30s
+kube-system   job.batch/rke-ingress-controller-deploy-job   1/1           6s         5m9s
+kube-system   job.batch/rke-metrics-addon-deploy-job        1/1           6s         5m20s
+kube-system   job.batch/rke-network-plugin-deploy-job       1/1           13s        5m45s
 
 
 # To destroy the cluster and delete the OAR job
 terraform destroy
 # ...
-helm_release.prometheus: Destroying... [id=prom-op]
-helm_release.prometheus: Destruction complete after 4s
-kubernetes_namespace.monitoring: Destroying... [id=monitoring]
-kubernetes_namespace.monitoring: Still destroying... [id=monitoring, 10s elapsed]
-kubernetes_namespace.monitoring: Destruction complete after 13s
-rke_cluster.cluster: Destroying... [id=9f7be6f0-01a4-4be6-b178-76a3459cb9eb]
-rke_cluster.cluster: Still destroying... [id=9f7be6f0-01a4-4be6-b178-76a3459cb9eb, 10s elapsed]
-rke_cluster.cluster: Destruction complete after 10s
-null_resource.docker_install[3]: Destroying... [id=6174148238043559366]
-null_resource.docker_install[0]: Destroying... [id=3829418478221242807]
-null_resource.docker_install[3]: Destruction complete after 0s
-null_resource.docker_install[0]: Destruction complete after 0s
-null_resource.docker_install[1]: Destroying... [id=7000171430741773912]
-null_resource.docker_install[2]: Destroying... [id=5248345062053011481]
-null_resource.docker_install[1]: Destruction complete after 0s
-null_resource.docker_install[2]: Destruction complete after 0s
-grid5000_deployment.my_deployment: Destroying... [id=D-a1976333-465e-4b7e-97b0-012e79f9e30a]
-grid5000_deployment.my_deployment: Destruction complete after 0s
-grid5000_job.my_job: Destroying... [id=1282973]
-grid5000_job.my_job: Destruction complete after 1s
+module.k8s_cluster.local_file.kube_cluster_yaml: Destroying... [id=067ddeeab04eb55eb19756d705f74f4481033df6]
+module.k8s_cluster.local_file.kube_cluster_yaml: Destruction complete after 0s
+module.k8s_cluster.rke_cluster.cluster: Destroying... [id=edd11299-1b9c-46aa-9027-9b49a8d8724d]
+module.k8s_cluster.rke_cluster.cluster: Destruction complete after 10s
+module.k8s_cluster.null_resource.docker_install[1]: Destroying... [id=2735933040659486651]
+module.k8s_cluster.null_resource.docker_install[1]: Destruction complete after 0s
+module.k8s_cluster.null_resource.docker_install[3]: Destroying... [id=362653944675258782]
+module.k8s_cluster.null_resource.docker_install[0]: Destroying... [id=5229444562703927069]
+module.k8s_cluster.null_resource.docker_install[2]: Destroying... [id=4065656999805753798]
+module.k8s_cluster.null_resource.docker_install[3]: Destruction complete after 0s
+module.k8s_cluster.null_resource.docker_install[2]: Destruction complete after 0s
+module.k8s_cluster.null_resource.docker_install[0]: Destruction complete after 0s
+module.k8s_cluster.grid5000_deployment.k8s: Destroying... [id=D-3c3d18c3-3f21-4f63-8c96-282fff9ea135]
+module.k8s_cluster.grid5000_deployment.k8s: Destruction complete after 0s
+module.k8s_cluster.grid5000_job.k8s: Destroying... [id=1457758]
+module.k8s_cluster.grid5000_job.k8s: Destruction complete after 1s
+
+Destroy complete! Resources: 8 destroyed.
 ```
