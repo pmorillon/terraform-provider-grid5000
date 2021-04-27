@@ -30,13 +30,16 @@ Edit `main.tf` file to describe your deployment, see available input values into
 module "g5k-openwhisk" {
     source = "./modules/g5k-openwhisk"
 
-    username = "username" # Replace by your Grid'5000 username
+    username = "username"           # Replace by your Grid'5000 username
     nodes_location = "rennes"
-    nodes_count = 5
+    nodes_count = 5                 # Min: 2 (1 controleplane, 1 worker node)     
     walltime = "1"
 
-    data_location = "rennes" # rennes or nantes
+    data_location = "rennes"        # rennes or nantes
     ceph_pool_quota = "200G"
+
+    kafka_replicas = 3              # Default: 1, according to available worker nodes
+    kafka_persistence_size = 30Gi   # Default: 20Gi
 }
 ```
 
@@ -163,7 +166,7 @@ service/ow-zookeeper    ClusterIP   None            <none>        2181/TCP,2888/
 ```
 
 ```sh
-> wsk property set --apihost https://parasilo-11.rennes.grid5000.fr:31001
+> wsk property set --apihost https://<one_of_your_workers_nodes>:31001 # See terraform output wsk_set_apihost
 > wsk property set --auth 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
 > wsk --insecure package list /whisk.system                                                                   
 packages

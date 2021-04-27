@@ -2,6 +2,11 @@ variable "nodes_count" {
     description = "Cluster size"
     type = number
     default = 4
+
+    validation {
+      condition = var.nodes_count >= 2
+      error_message = "Variable nodes_count must be >= 2."
+    }
 }
 
 variable "walltime" {
@@ -42,4 +47,16 @@ variable "nodes_selector" {
     description = "Nodes selector (OAR SQL notation surrounded by curly brackets)"
     type = string
     default = ""
+}
+
+variable "kafka_replicas" {
+    description = "Kafka replicaCount"
+    type = number
+    default = 1
+}
+
+variable "kafka_persistence_size" {
+    description = "Kafka persistence size"
+    type = string
+    default = "20Gi"
 }

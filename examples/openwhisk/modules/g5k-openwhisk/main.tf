@@ -158,9 +158,9 @@ k8s:
     explicitStorageClass: csid-rbd-sc
 
 kafka:
-  replicaCount: 3
+  replicaCount: ${var.kafka_replicas}
   persistence:
-    size: 20Gi
+    size: ${var.kafka_persistence_size}
 
 db:
   persistence:
