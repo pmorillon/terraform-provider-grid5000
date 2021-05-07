@@ -17,7 +17,7 @@ On a Grid'5000 frontend :
 ```sh
 # Clone this repo
 git clone https://github.com/pmorillon/terraform-provider-grid5000.git
-cd terraform-grid5000-provider/examples/kubernetes
+cd terraform-provider-grid5000/examples/kubernetes
 
 
 # init : will automatically download required Terraform providers
