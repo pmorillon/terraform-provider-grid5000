@@ -34,6 +34,7 @@ func Provider() *schema.Provider {
 			"grid5000_node":          dataSourceGrid5000Node(),
 			"grid5000_vlan_nodelist": dataSourceGrid5000VlanNodelist(),
 			"grid5000_ceph_auth":     dataSourceGrid5000CephAuth(),
+			"grid5000_nodes_role":    dataSourceGrid5000NodesRole(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
