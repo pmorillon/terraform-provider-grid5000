@@ -1,4 +1,4 @@
-version = 99.0.0
+version = 0.0.8
 provider_path = registry.terraform.io/pmorillon/grid5000/$(version)/darwin_amd64/
 
 install_macos:
