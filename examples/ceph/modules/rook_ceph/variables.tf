@@ -31,7 +31,7 @@ variable "ceph_metadata_device" {
 variable "rook_ceph_version" {
   description = "Rook Ceph version"
   type        = string
-  default     = "v1.5.5"
+  default     = "v1.6.10"
 }
 
 variable "ceph_version" {
