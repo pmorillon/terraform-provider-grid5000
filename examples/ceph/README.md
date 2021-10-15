@@ -43,10 +43,10 @@ module "rook_ceph" {
     cluster_selector = "parasilo"
 
     # Uncomment ceph_metadata_device if you want to use an ssd disk for Bluestore metadata.
-    # parasilo@rennes : sdf
-    # chifflot@lille : sdb
+    # parasilo@rennes : disk5
+    # chifflot@lille : disk1
     #
-    # ceph_metadata_device = "sdf"
+    # ceph_metadata_device = "disk5"
 
     # Number of reserved nodes, 4 minimum (1 Kubernetes controlplane/etcd node, 3 workers 
     # in order to satisfy the Ceph monitors quorum).
