@@ -56,7 +56,7 @@ module "rook_ceph" {
     walltime = "3"
 
     # Other defaults variables :
-    # rook_ceph_version = "v1.5.5"
+    # rook_ceph_version = "v1.6.10"
     # ceph_version = "v15.2.8-20201217"
 }
 ```
