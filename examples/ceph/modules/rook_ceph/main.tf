@@ -200,7 +200,7 @@ storage:
     devices:
 %{ for d in grid5000_job.k8s.disks_resources ~}
 %{ if d["hostname"] == h && d.device != var.ceph_metadata_device ~}
-    - name: ${d.device}
+    - name: /dev/${d.device}
 %{ endif ~}
 %{ endfor ~}
 %{ endif ~}
