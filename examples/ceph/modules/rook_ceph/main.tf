@@ -192,7 +192,7 @@ ceph:
   version: ${var.ceph_version}
 storage:
   config:
-    metadataDevice: ${var.ceph_metadata_device}
+    metadataDevice: "${var.ceph_metadata_device}"
   nodes:
 %{ for h in distinct([for d in grid5000_job.k8s.disks_resources : d["hostname"]]) ~}
 %{ if !contains([ for i in rke_cluster.cluster.control_plane_hosts : i["address" ] ], h) ~}
