@@ -28,6 +28,7 @@ func Provider() *schema.Provider {
 			"grid5000_job":        resourceJob(),
 			"grid5000_deployment": resourceDeployment(),
 			"grid5000_ceph_pool":  resourceCephPool(),
+			"grid5000_firewall":   resourceFirewall(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"grid5000_site":          dataSourceGrid5000Site(),
@@ -35,6 +36,7 @@ func Provider() *schema.Provider {
 			"grid5000_vlan_nodelist": dataSourceGrid5000VlanNodelist(),
 			"grid5000_ceph_auth":     dataSourceGrid5000CephAuth(),
 			"grid5000_nodes_role":    dataSourceGrid5000NodesRole(),
+			"grid5000_ipv6_nodelist": dataSourceGrid5000IPv6Nodelist(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
