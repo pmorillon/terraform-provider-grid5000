@@ -25,15 +25,28 @@ func resourceFirewallCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*gog5k.Client)
 	ctx := context.Background()
 
-	addresses := expandNodes(d.Get("address").(*schema.Set).List())
+	rules := d.Get("rule").([]interface{})
+	req := []*gog5k.Firewall{}
 
-	firewallRequest := &gog5k.FirewallCreateRequest{
-		Address: addresses,
-		Port:    d.Get("port").(string),
-		//Protocol: d.Get("protocol").(string),
+	if len(rules) > 0 {
+		for _, r := range rules {
+			firewallRuleRequest := &gog5k.Firewall{}
+			rule := r.(map[string]interface{})
+
+			firewallRuleRequest.Dest = expandNodes(rule["dest"].(*schema.Set).List())
+			firewallRuleRequest.Src = expandNodes(rule["src"].(*schema.Set).List())
+
+			if rule["protocol"].(string) != "tcp+udp" {
+				firewallRuleRequest.Protocol = rule["protocol"].(string)
+			}
+
+			if rule["protocol"].(string) != "all" {
+				firewallRuleRequest.Ports = expandInt(rule["ports"].(*schema.Set).List())
+			}
+
+			req = append(req, firewallRuleRequest)
+		}
 	}
-
-	req := []*gog5k.FirewallCreateRequest{firewallRequest}
 
 	_, err := client.Firewall.Create(ctx, site, int32(jobID), req)
 	if err != nil {
@@ -42,16 +55,43 @@ func resourceFirewallCreate(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(fmt.Sprintf("%d", jobID))
 
-	return nil
+	return resourceFirewallRead(d, m)
 }
 
 func resourceFirewallRead(d *schema.ResourceData, m interface{}) error {
+	// if d.Id() != "" {
+	// 	client := m.(*gog5k.Client)
+	// 	ctx := context.Background()
+	// 	jobID, _ := strconv.Atoi(d.Id())
+
+	// 	firewall, _, err := client.Firewall.Get(ctx, d.Get("site").(string), int32(jobID))
+	// 	if err != nil {
+	// 		return err
+	// 	}
+
+	// 	rules := make([]interface{}, len(firewall))
+
+	// 	for _, rule := range firewall {
+	// 		r := make(map[string]interface{})
+	// 		r["dest"] = rule.Dest
+	// 		r["protocol"] = rule.Protocol
+	// 		r["src"] = rule.Src
+	// 		r["ports"] = rule.Ports
+	// 		rules = append(rules, r)
+	// 	}
+	// 	if err := d.Set("rule", rules); err != nil {
+	// 		log.Printf("[ERROR] %v", err)
+	// 	}
+	// }
 
 	return nil
 }
 
 func resourceFirewallUpdate(d *schema.ResourceData, m interface{}) error {
-	return nil
+	resourceFirewallDelete(d, m)
+	resourceFirewallCreate(d, m)
+
+	return resourceFirewallRead(d, m)
 }
 
 func resourceFirewallDelete(d *schema.ResourceData, m interface{}) error {
@@ -66,4 +106,13 @@ func resourceFirewallDelete(d *schema.ResourceData, m interface{}) error {
 	}
 	d.SetId("")
 	return nil
+}
+
+func expandInt(nodes []interface{}) []int {
+	expandedInt := make([]int, len(nodes))
+	for i, v := range nodes {
+		expandedInt[i] = v.(int)
+	}
+
+	return expandedInt
 }
