@@ -57,6 +57,9 @@ func resourceJobCreate(d *schema.ResourceData, m interface{}) error {
 
 	for {
 		job, _, err = client.OARJobs.Get(ctx, site, jobID)
+		if err != nil {
+			return err
+		}
 		if job.ScheduledAt != 0 {
 			break
 		}
