@@ -8,34 +8,38 @@ terraform {
   required_providers {
     grid5000 = {
       source  = "pmorillon/grid5000"
-      version = "~> 0.0.9"
+      version = "~> 0.0.8"
     }
   }
 }
 
-# Grid5000 provider configuration
+# Locals
 #
-provider "grid5000" {
-  restfully_file = "/Users/pmorillon/.restfully/api.grid5000.fr.yml"
+locals {
+  site = "rennes"
 }
 
 # OAR resources reservation
 #
-resource "grid5000_job" "firewall" {
-  name      = "Terraform Firewall"
-  site      = "rennes"
+resource "grid5000_job" "job1" {
+  site      = local.site
   command   = "sleep 1d"
-  resources = "/nodes=1"
+  resources = "/nodes=1,walltime=1"
   types     = ["deploy"]
 }
 
 # Kadeploy bare-metal deployment
 #
 resource "grid5000_deployment" "debian" {
-  site        = "rennes"
+  site        = local.site
   environment = "debian10-x64-base"
-  nodes       = grid5000_job.firewall.assigned_nodes
+  nodes       = grid5000_job.job1.assigned_nodes
   key         = file("~/.ssh/id_rsa.pub")
+}
+
+data "grid5000_node" "node" {
+  name = element(sort(grid5000_job.job1.assigned_nodes), 0)
+  site = local.site
 }
 
 # nginx install
@@ -47,29 +51,36 @@ resource "null_resource" "nginx_install" {
     host        = element(sort(grid5000_deployment.debian.nodes), count.index)
     type        = "ssh"
     user        = "root"
-    bastion_host  = "access.grid5000.fr"
-    bastion_user  = "pmorillo"
   }
 
   provisioner "remote-exec" {
     inline = [
       "apt install -y nginx >/dev/null 2>&1",
-      "dhclient -6 eno1 >/dev/null 2>&1",
+      "dhclient -6 ${data.grid5000_node.node.primary_network_interface} >/dev/null 2>&1",
     ]
   }
 }
 
 data "grid5000_ipv6_nodelist" "ipv6list" {
-  nodelist = grid5000_job.firewall.assigned_nodes 
+  nodelist = grid5000_job.job1.assigned_nodes 
 }
 
 resource "grid5000_firewall" "f1" {
     depends_on = [
-      grid5000_deployment.debian
+      null_resource.nginx_install
     ]
 
-    site = "rennes"
-    job_id = grid5000_job.firewall.id
-    address = data.grid5000_ipv6_nodelist.ipv6list.result
-    port = 80
+    site = local.site
+    job_id = grid5000_job.job1.id
+
+    rule {
+      dest = data.grid5000_ipv6_nodelist.ipv6list.result
+      ports = [80]
+    }
+
+    rule {
+      dest = data.grid5000_ipv6_nodelist.ipv6list.result
+      ports = [443]
+    }
+    
 }
