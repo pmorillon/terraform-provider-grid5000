@@ -46,7 +46,7 @@ func resourceDeploymentCreate(d *schema.ResourceData, m interface{}) error {
 
 	id := deployment.ID
 
-	deployment, err = client.Deployments.WaitForState(ctx, site, id, gog5k.DeploymentTerminatedState)
+	_, err = client.Deployments.WaitForState(ctx, site, id, gog5k.DeploymentTerminatedState)
 	if err != nil {
 		return err
 	}

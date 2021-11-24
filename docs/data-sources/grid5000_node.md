@@ -28,3 +28,4 @@ The following attributes are exported:
 
 * `ip` - IPv4 address of main network adapter.
 * `ip6` - IPv6 address of main network adapter.
+* `primary_network_interface` - Primary network interface name.

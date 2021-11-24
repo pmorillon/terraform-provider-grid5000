@@ -33,6 +33,10 @@ func dataSourceGrid5000Node() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"primary_network_interface": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -52,6 +56,7 @@ func datasourceGrid5000NodeRead(d *schema.ResourceData, m interface{}) error {
 		if n.Mounted {
 			d.Set("ip", n.IP)
 			d.Set("ip6", n.IP6)
+			d.Set("primary_network_interface", n.Name)
 			break
 		}
 	}
