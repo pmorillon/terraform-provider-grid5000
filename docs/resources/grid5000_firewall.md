@@ -10,12 +10,23 @@ data "grid5000_ipv6_nodelist" "ipv6list" {
 }
 
 resource "grid5000_firewall" "f1" {
-    site = local.site
-    job_id = grid5000_job.firewall.id
-    dest = data.grid5000_ipv6_nodelist.ipv6list.result
-    ports = [
-      80
+    depends_on = [
+      null_resource.nginx_install
     ]
+
+    site = local.site
+    job_id = grid5000_job.job1.id
+
+    rule {
+      dest = data.grid5000_ipv6_nodelist.ipv6list.result
+      ports = [80]
+    }
+
+    rule {
+      dest = data.grid5000_ipv6_nodelist.ipv6list.result
+      ports = [443]
+    }
+    
 }
 ```
 
@@ -23,16 +34,28 @@ resource "grid5000_firewall" "f1" {
 ❯ terraform state show grid5000_firewall.f1
 # grid5000_firewall.f1:
 resource "grid5000_firewall" "f1" {
-    dest     = [
-        "paravance-8-ipv6.rennes.grid5000.fr",
-    ]
-    id       = "1828028"
-    job_id   = 1828028
-    ports    = [
-        80,
-    ]
-    protocol = "tcp+udp"
-    site     = "rennes"
+    id     = "1846596"
+    job_id = 1846596
+    site   = "rennes"
+
+    rule {
+        dest     = [
+            "paravance-7-ipv6.rennes.grid5000.fr",
+        ]
+        ports    = [
+            80,
+        ]
+        protocol = "tcp+udp"
+    }
+    rule {
+        dest     = [
+            "paravance-7-ipv6.rennes.grid5000.fr",
+        ]
+        ports    = [
+            443,
+        ]
+        protocol = "tcp+udp"
+    }
 }
 ```
 
@@ -40,6 +63,14 @@ resource "grid5000_firewall" "f1" {
 
 * `site` - (Required) A grid'5000 site.
 * `job_id` - (Required) OAR job ID.
+* `rule` - (MinItems: 1) Firewall Rule (list).
+
+## Nested blocks
+
+### `rule`
+
+#### Arguments
+
 * `dest` - (Required) Set of IPv6 destination addresses.
 * `src` - (Optional) Set of IPv6 source addresses.
 * `ports` - (Optional) Set of opened ports. Not used if protocal argument is __all__.
