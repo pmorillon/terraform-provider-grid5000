@@ -51,6 +51,7 @@ resource "null_resource" "nginx_install" {
     host        = element(sort(grid5000_deployment.debian.nodes), count.index)
     type        = "ssh"
     user        = "root"
+    private_key = file("~/.ssh/id_rsa")
   }
 
   provisioner "remote-exec" {
