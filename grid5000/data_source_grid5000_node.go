@@ -13,31 +13,7 @@ func dataSourceGrid5000Node() *schema.Resource {
 	return &schema.Resource{
 		Read: datasourceGrid5000NodeRead,
 
-		Schema: map[string]*schema.Schema{
-			// Filters
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"site": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-
-			// Out parameters
-			"ip": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"ip6": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"primary_network_interface": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-		},
+		Schema: grid5000NodeFields(),
 	}
 }
 
