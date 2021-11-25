@@ -70,12 +70,12 @@ func datasourceGrid5000SiteRead(d *schema.ResourceData, m interface{}) error {
 
 	site, _, err := client.Sites.GetByName(ctx, d.Get("name").(string))
 	if err != nil {
-		return fmt.Errorf("Failed to get site : %v", err)
+		return fmt.Errorf("failed to get site : %v", err)
 	}
 
 	clusters, _, err := client.Clusters.List(ctx, site.UID)
 	if err != nil {
-		return fmt.Errorf("Failed to get clusters: %v", err)
+		return fmt.Errorf("failed to get clusters: %v", err)
 	}
 
 	d.SetId(site.UID)

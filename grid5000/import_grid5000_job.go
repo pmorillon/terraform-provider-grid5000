@@ -13,12 +13,12 @@ import (
 
 func resourceGrid5000JobImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 	if len(d.Id()) == 0 {
-		return nil, fmt.Errorf("Import ID (<job_id>@<site>) is nil")
+		return nil, fmt.Errorf("import ID (<job_id>@<site>) is nil")
 	}
 
 	args := strings.Split(d.Id(), "@")
 	if len(args) != 2 {
-		return nil, fmt.Errorf("Import ID bad format (<job_id>@<site>)")
+		return nil, fmt.Errorf("import ID bad format (<job_id>@<site>)")
 	}
 
 	jobID, _ := strconv.Atoi(args[0])
@@ -29,7 +29,7 @@ func resourceGrid5000JobImport(d *schema.ResourceData, m interface{}) ([]*schema
 
 	job, _, err := client.OARJobs.Get(ctx, site, int32(jobID))
 	if err != nil {
-		return nil, fmt.Errorf("Failed to get job : %v", err)
+		return nil, fmt.Errorf("failed to get job : %v", err)
 	}
 
 	if isJobAvailable(*job) {
@@ -54,7 +54,7 @@ func resourceGrid5000JobImport(d *schema.ResourceData, m interface{}) ([]*schema
 			log.Printf("Error : %v", err)
 		}
 	} else {
-		return nil, fmt.Errorf("Job is not running")
+		return nil, fmt.Errorf("job is not running")
 	}
 	return []*schema.ResourceData{d}, nil
 }

@@ -10,34 +10,34 @@ import (
 
 func grid5000JobFields() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"site": &schema.Schema{
+		"site": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"name": &schema.Schema{
+		"name": {
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"types": &schema.Schema{
+		"types": {
 			Type:     schema.TypeSet,
 			Optional: true,
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
 		},
-		"resources": &schema.Schema{
+		"resources": {
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"reservation": &schema.Schema{
+		"reservation": {
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"command": &schema.Schema{
+		"command": {
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"scheduled_at_limit": &schema.Schema{
+		"scheduled_at_limit": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Default:  "5m",
@@ -48,34 +48,34 @@ func grid5000JobFields() map[string]*schema.Schema {
 				return
 			},
 		},
-		"need_state": &schema.Schema{
+		"need_state": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Default:  "running",
 		},
-		"properties": &schema.Schema{
+		"properties": {
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"state": &schema.Schema{
+		"state": {
 			Type:     schema.TypeString,
 			Computed: true,
 		},
-		"assigned_nodes": &schema.Schema{
+		"assigned_nodes": {
 			Type:     schema.TypeSet,
 			Computed: true,
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
 		},
-		"vlans_resources": &schema.Schema{
+		"vlans_resources": {
 			Type:     schema.TypeList,
 			Computed: true,
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
 		},
-		"subnets_resources": &schema.Schema{
+		"subnets_resources": {
 			Type:     schema.TypeList,
 			Computed: true,
 			Elem: &schema.Schema{
