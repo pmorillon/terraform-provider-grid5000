@@ -31,11 +31,11 @@ variable "ceph_metadata_device" {
 variable "rook_ceph_version" {
   description = "Rook Ceph version"
   type        = string
-  default     = "v1.6.10"
+  default     = "v1.9.0"
 }
 
 variable "ceph_version" {
     description = "Ceph version"
     type = string
-    default = "v15.2.8-20201217"
+    default = "v16.2.7"
 }
