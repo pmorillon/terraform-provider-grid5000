@@ -44,7 +44,7 @@ func datasourceGrid5000CephAuthRead(d *schema.ResourceData, m interface{}) error
 
 	auth, _, err := client.CSOD.GetAuth(ctx, d.Get("site").(string), d.Get("username").(string))
 	if err != nil {
-		return fmt.Errorf("Failed to get node : %v", err)
+		return fmt.Errorf("failed to get node : %v", err)
 	}
 
 	d.Set("key", auth.Key)

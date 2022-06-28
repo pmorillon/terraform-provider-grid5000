@@ -3,6 +3,7 @@ package grid5000
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -13,31 +14,7 @@ func dataSourceGrid5000Node() *schema.Resource {
 	return &schema.Resource{
 		Read: datasourceGrid5000NodeRead,
 
-		Schema: map[string]*schema.Schema{
-			// Filters
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"site": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-
-			// Out parameters
-			"ip": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"ip6": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"primary_network_interface": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-		},
+		Schema: grid5000NodeFields(),
 	}
 }
 
@@ -47,7 +24,7 @@ func datasourceGrid5000NodeRead(d *schema.ResourceData, m interface{}) error {
 
 	node, _, err := client.Nodes.Get(ctx, d.Get("site").(string), shortHostname(d.Get("name").(string)))
 	if err != nil {
-		return fmt.Errorf("Failed to get node : %v", err)
+		return fmt.Errorf("failed to get node : %v", err)
 	}
 
 	d.SetId(node.UID)
@@ -59,6 +36,30 @@ func datasourceGrid5000NodeRead(d *schema.ResourceData, m interface{}) error {
 			d.Set("primary_network_interface", n.Name)
 			break
 		}
+	}
+
+	network_adapters := make([]interface{}, 0)
+	for _, netif := range node.NetworkAdapters {
+		n := make(map[string]interface{})
+		n["name"] = netif.Name
+		n["device"] = netif.Device
+		n["mounted"] = netif.Mounted
+		n["mountable"] = netif.Mountable
+		n["enabled"] = netif.Enabled
+		n["ip"] = netif.IP
+		n["ip6"] = netif.IP6
+		n["driver"] = netif.Driver
+		n["vendor"] = netif.Vendor
+		n["switch"] = netif.Switch
+		n["switch_port"] = netif.SwitchPort
+		n["model"] = netif.Model
+		n["interface"] = netif.Interface
+		n["mac"] = netif.MAC
+		n["rate"] = netif.Rate
+		network_adapters = append(network_adapters, n)
+	}
+	if err := d.Set("network_adapters", network_adapters); err != nil {
+		log.Printf("[ERROR] %v\n", err)
 	}
 
 	return nil

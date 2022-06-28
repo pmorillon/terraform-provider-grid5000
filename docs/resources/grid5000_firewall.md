@@ -6,7 +6,7 @@ Manage Grid'5000 reconfigurable firewall, see [Grid'5000 service documentation](
 
 ```hcl
 data "grid5000_ipv6_nodelist" "ipv6list" {
-  nodelist = grid5000_job.firewall.assigned_nodes 
+  nodelist = grid5000_job.job1.assigned_nodes 
 }
 
 resource "grid5000_firewall" "f1" {

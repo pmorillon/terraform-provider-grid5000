@@ -8,11 +8,11 @@ terraform {
   required_providers {
     grid5000 = {
       source  = "pmorillon/grid5000"
-      version = "~> 0.0.6"
+      version = "~> 0.0.8"
     }
     rke = {
       source  = "rancher/rke"
-      version = "~> 1.1.7"
+      version = "~> 1.3.0"
     }
   }
 }
@@ -166,7 +166,7 @@ resource "null_resource" "format_disks" {
 }
 
 # Get Grid5000 Reference repository information for the first worker node
-# Used to get the IP address in order to generate xip.io hostnames for Kubernetes Ingresses
+# Used to get the IP address in order to generate nip.io hostnames for Kubernetes Ingresses
 #
 data "grid5000_node" "worker" {
   site = var.site
@@ -210,7 +210,7 @@ EOT
 
   set {
     name = "dashboard.hostname"
-    value = "ceph.${data.grid5000_node.worker.ip}.xip.io"
+    value = "ceph.${data.grid5000_node.worker.ip}.nip.io"
   }
 
 }
@@ -252,20 +252,20 @@ prometheus:
   ingress:
     enabled: true
     hosts:
-      - prometheus.${data.grid5000_node.worker.ip}.xip.io
+      - prometheus.${data.grid5000_node.worker.ip}.nip.io
     tls:
       - secretName: prometheus-tls
         hosts:
-          - prometheus.${data.grid5000_node.worker.ip}.xip.io
+          - prometheus.${data.grid5000_node.worker.ip}.nip.io
 alertmanager:
   ingress:
     enabled: true
     hosts:
-      - alertmanager.${data.grid5000_node.worker.ip}.xip.io
+      - alertmanager.${data.grid5000_node.worker.ip}.nip.io
     tls:
       - secretName: alertmanager-tls
         hosts:
-          - alertmanager.${data.grid5000_node.worker.ip}.xip.io
+          - alertmanager.${data.grid5000_node.worker.ip}.nip.io
 grafana:
   adminPassword: admin
   sidecar:
@@ -274,11 +274,11 @@ grafana:
   ingress:
     enabled: true
     hosts:
-      - grafana.${data.grid5000_node.worker.ip}.xip.io
+      - grafana.${data.grid5000_node.worker.ip}.nip.io
     tls:
       - secretName: grafana-tls
         hosts:
-          - grafana.${data.grid5000_node.worker.ip}.xip.io
+          - grafana.${data.grid5000_node.worker.ip}.nip.io
 EOT
   ]
 }

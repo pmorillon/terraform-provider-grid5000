@@ -6,34 +6,34 @@ import "github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
 func grid5000DeploymentFields() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"site": &schema.Schema{
+		"site": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"environment": &schema.Schema{
+		"environment": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"key": &schema.Schema{
+		"key": {
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"nodes": &schema.Schema{
+		"nodes": {
 			Type:     schema.TypeSet,
 			Required: true,
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
 		},
-		"partition_number": &schema.Schema{
+		"partition_number": {
 			Type:     schema.TypeInt,
 			Optional: true,
 		},
-		"vlan": &schema.Schema{
+		"vlan": {
 			Type:     schema.TypeInt,
 			Optional: true,
 		},
-		"state": &schema.Schema{
+		"state": {
 			Type:     schema.TypeString,
 			Computed: true,
 		},
