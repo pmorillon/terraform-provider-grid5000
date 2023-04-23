@@ -49,6 +49,12 @@ variable "nodes_selector" {
     default = ""
 }
 
+variable "oar_extra_types" {
+    description = "OAR extra types for resource reservation"
+    type = list
+    default = []
+}
+
 variable "kafka_replicas" {
     description = "Kafka replicaCount"
     type = number

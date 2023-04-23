@@ -8,6 +8,9 @@ module "g5k-openwhisk" {
 
     data_location = "rennes" # rennes or nantes
     ceph_pool_quota = "200G"
+    # oar_extra_types = [
+    #     "exotic"
+    # ]
 }
 
 output "wsk_set_apihost" {

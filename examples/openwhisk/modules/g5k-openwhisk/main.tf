@@ -3,7 +3,7 @@ terraform {
   required_providers {
     grid5000 = {
       source = "pmorillon/grid5000"
-      version = "0.0.7"
+      version = "0.0.10"
     } # Used for Ceph pool management
   }
 }
@@ -12,13 +12,14 @@ terraform {
 #
 module "k8s-cluster" {
   source  = "pmorillon/k8s-cluster/grid5000"
-  version = "0.0.4"
+  version = "0.0.6"
 
   walltime        = var.walltime
   site            = var.nodes_location
   nodes_count     = var.nodes_count
   nodes_selector  = var.nodes_selector
   oar_job_name    = "openwhisk-tf"
+  oar_extra_types = var.oar_extra_types
 }
 
 # Configure Kubernetes provider
