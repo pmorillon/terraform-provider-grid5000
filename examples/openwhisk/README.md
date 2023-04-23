@@ -40,6 +40,9 @@ module "g5k-openwhisk" {
 
     kafka_replicas = 3              # Default: 1, according to available worker nodes
     kafka_persistence_size = 30Gi   # Default: 20Gi
+    # oar_extra_types = [
+    #     "exotic"
+    # ]
 }
 ```
 
